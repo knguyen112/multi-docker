@@ -1,0 +1,17 @@
+sudo: required
+language: generic
+
+services:
+  - docker
+
+before_install:
+  - docker build -t knguyen112/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true knguyen112/react-test npm test
+
+after_success:
+  - docker build -t knguyen112/multi-client ./client
+  - docker build -t knguyen112/multi-nginx ./nginx
+  - docker build -t knguyen112/multi-server ./server
+  - docker build -t knguyen112/multi-worker ./worker
